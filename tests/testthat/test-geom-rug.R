@@ -20,3 +20,26 @@ test_that("coord_flip flips the rugs", {
   expect_equal(length(b[[1]]$children[[1]]$y0), 1)
   expect_equal(length(b[[1]]$children[[1]]$y1), 1)
 })
+
+df <- tibble::tibble(x = 1:5, y = 1:5)
+
+gg_rug <- ggplot(df, aes(x = x, y = y)) +
+  geom_rug()
+
+test_that("geom_rug works", {
+  vdiffr::expect_doppelganger("geom_rug", gg_rug)
+})
+
+context("geom_rug works with outside option")
+
+df <- tibble::tibble(x = 1:5, y = 1:5)
+
+gg_rug_outside <- ggplot(df, aes(x = x, y = y)) +
+  geom_rug(outside = TRUE,
+           sides = "tr") +
+  coord_cartesian(clip = "off") +
+  theme(plot.margin = margin(1, 1, 1, 1, "cm"))
+
+test_that("geom_rug works with outside = TRUE", {
+    vdiffr::expect_doppelganger("geom_rug_outside", gg_rug_outside)
+  })
